@@ -3,7 +3,7 @@ RSpec.describe 'FieldPicker' do
   # We define 'let' in cascade where each one of them is used by the # one below. This allows us to override any of them easily in a
   # specific context.
   let(:rails_tutorial) { create(:ruby_on_rails_tutorial) }
-  let(:params) { { fields: 'id,title,subtitle' } }
+  let(:params) { { fields: 'id,title' } }
   let(:presenter) { BookPresenter.new(rails_tutorial, params) }
   let(:field_picker) { FieldPicker.new(presenter) }
   # We don't want our tests to rely too much on the actual implementation of
@@ -19,7 +19,7 @@ RSpec.describe 'FieldPicker' do
   # Pick is the main method of the FieldPicker. It's meant to be used
   # as 'FieldPicker.new(presenter).pick and should return the same presenter' # with updated data
   describe '#pick' do
-    context 'with the "fields" parameter containing "id,title,subtitle"' do
+    context 'with the "fields" parameter containing "id,title"' do
       it 'updates the presenter "data" with the book "id" and "title"' do
         expect(field_picker.pick.data).to eq({
           'id'    => rails_tutorial.id,
@@ -56,6 +56,16 @@ RSpec.describe 'FieldPicker' do
           })
         end
       end
+
+      context 'with invalid attributes "fid"' do
+        let(:params) { { fields: 'fid,title' } }
+
+        it 'raises a "RepresentationBuilderError"' do
+          expect { field_picker.pick }.to(
+            raise_error(RepresentationBuilderError))
+        end
+      end
+
     end
   end
 end
