@@ -1,4 +1,5 @@
 class BasePresenter
+  include Rails.application.routes.url_helpers
   # Metaprogramming
   CLASS_ATTRIBUTES = {
     build_with: :build_attributes,
